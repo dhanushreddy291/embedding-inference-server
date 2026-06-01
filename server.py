@@ -12,7 +12,7 @@ model: SentenceTransformer | None = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model
-    model = SentenceTransformer("google/embeddinggemma-300m")
+    model = SentenceTransformer("google/embeddinggemma-300m", local_files_only=True)
     yield
     model = None
 
