@@ -13,7 +13,6 @@ RUN pip install --no-cache-dir uv
 WORKDIR /app
 
 COPY pyproject.toml ./
-COPY main.py ./
 COPY server.py ./
 
 RUN uv pip install --system --no-cache .
