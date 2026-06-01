@@ -70,9 +70,7 @@ jobs:
           IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           MANIFEST_TAG=${{ inputs.tag }}
 
-          docker manifest create \
-            $IMAGE_NAME:$MANIFEST_TAG \
-            --amend $IMAGE_NAME:$MANIFEST_TAG-amd64 \
-            --amend $IMAGE_NAME:$MANIFEST_TAG-arm64
-
-          docker manifest push $IMAGE_NAME:$MANIFEST_TAG
+          docker buildx imagetools create \
+            $IMAGE_NAME:$MANIFEST_TAG-amd64 \
+            $IMAGE_NAME:$MANIFEST_TAG-arm64 \
+            -t $IMAGE_NAME:$MANIFEST_TAG
