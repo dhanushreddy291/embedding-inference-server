@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from typing import Literal, cast
+from typing import Literal
 
 import torch
 from fastapi import FastAPI, HTTPException
@@ -71,11 +71,13 @@ def embed_chunks(chunks: list[str], task_type: str) -> torch.Tensor:
     encode_fn = (
         model.encode_query if task_type == "query" else model.encode_document
     )
-    return cast(torch.Tensor, encode_fn(chunks))
+    result = encode_fn(chunks)
+    return torch.as_tensor(result)
 
 
 def aggregate_embeddings(chunk_embeddings: torch.Tensor) -> list[float]:
-    mean_embedding = chunk_embeddings.mean(dim=0)
+    t = torch.as_tensor(chunk_embeddings)
+    mean_embedding = t.mean(dim=0)
     norm = torch.norm(mean_embedding)
     if norm > 0:
         mean_embedding = mean_embedding / norm
